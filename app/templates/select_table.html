@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head><title>테이블 조회</title></head>
+<body>
+    <h2>테이블 선택</h2>
+    <form method="get" action="/select-table">
+        <select name="table_name">
+            {% for t in tables %}
+                <option value="{{ t }}" {% if t == table_name %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">조회</button>
+    </form>
+
+    {% if table_name %}
+        <h3>{{ table_name }} 테이블 데이터</h3>
+        {% if rows %}
+            <table border="1">
+                <tr>
+                    {% for col in columns %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+                {% for row in rows %}
+                    <tr>
+                        {% for col in columns %}
+                            <td>{{ row[loop.index0] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>데이터가 없습니다.</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
