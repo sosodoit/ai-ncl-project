@@ -58,12 +58,15 @@ class PostgreDB:
             self._close()
 
     # db insert
-    def _insert(self, table_name: str, columns: List[str], values: List) -> None:
+    def _insert(self, table_name: str, columns: List[str], values: List, conflict_key: str = None) -> None:
         
         columns_str = ', '.join(columns)  # 컬럼 이름을 문자열로 연결
         placeholders = ', '.join(['%s'] * len(values))  # 값의 개수에 맞게 플레이스홀더 생성
         
         sql = f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})"
+
+        if conflict_key:
+            sql += f" ON CONFLICT ({conflict_key}) DO NOTHING"
 
         try:
             self.cursor.execute(sql,values)
