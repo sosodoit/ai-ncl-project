@@ -12,22 +12,37 @@ from pydantic import BaseModel
 from fastapi import FastAPI, Request, Query, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from app.database import PostgreDB
 
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory="app/static", html=True), name="static")
 
 #############################################################
-#------------------- (확인용) 랜딩 페이지 ---------------------#
+#------------------------ 랜딩 페이지 ------------------------#
 @app.get("/", response_class=HTMLResponse)
 def root(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    corp_names = []
+    try:
+        db = PostgreDB()
+        db._connection()
+        db.cursor.execute("SELECT corp_name FROM company_info ORDER BY corp_name LIMIT 10;")  # 필요 시 LIMIT 조절
+        corp_names = [row[0] for row in db.cursor.fetchall()]
+        db._close()
+    except Exception as e:
+        print(f"기업 리스트 조회 에러: {e}")
+
+    return templates.TemplateResponse("home.html", {
+        "request": request,
+        "corp_names": corp_names
+    })
 #-----------------------------------------------------------#
 
 #############################################################
-#------------------ 기업 검색 & 상세 페이지 -------------------#
+#------------------- 기업 검색 결과 페이지 --------------------#
 @app.get("/search-company", response_class=HTMLResponse)
-def search_company(request: Request, corp_name: str = Query(default=None)):
+def search_company(request: Request, corp_name: str = None):
     
     result = None
 
@@ -75,6 +90,7 @@ def select_and_view_table(request: Request, table_name: str = Query(None)):
             colnames = [desc[0] for desc in db.cursor.description]
 
             db._close()
+
         except Exception as e:
             return HTMLResponse(content=f"<h1>에러 발생: {e}</h1>", status_code=500)
 

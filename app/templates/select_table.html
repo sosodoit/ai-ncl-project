@@ -1,37 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head><title>테이블 조회</title></head>
-<body>
-    <h2>테이블 선택</h2>
-    <form method="get" action="/select-table">
-        <select name="table_name">
-            {% for t in tables %}
-                <option value="{{ t }}" {% if t == table_name %}selected{% endif %}>{{ t }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">조회</button>
-    </form>
+{% extends "base.html" %}
+{% block title %}DB 조회{% endblock %}
+{% block content %}
 
-    {% if table_name %}
-        <h3>{{ table_name }} 테이블 데이터</h3>
-        {% if rows %}
-            <table border="1">
-                <tr>
-                    {% for col in columns %}
-                        <th>{{ col }}</th>
-                    {% endfor %}
-                </tr>
-                {% for row in rows %}
+<h2>테이블 조회</h2>
+
+<!-- 테이블 선택 폼 -->
+<form method="get" action="/select-table" class="table-select-form">
+    <select name="table_name">
+        {% for t in tables %}
+            <option value="{{ t }}" {% if t == table_name %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">조회</button>
+</form>
+
+<!-- 선택된 테이블 결과 -->
+{% if table_name %}
+    <h3 style="margin-top: 2rem;">📄 {{ table_name }} 테이블</h3>
+
+    {% if rows %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
                     <tr>
                         {% for col in columns %}
-                            <td>{{ row[loop.index0] }}</td>
+                            <th>{{ col }}</th>
                         {% endfor %}
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                        <tr>
+                            {% for cell in row %}
+                                <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
-        {% else %}
-            <p>데이터가 없습니다.</p>
-        {% endif %}
+        </div>
+    {% else %}
+        <p class="message">데이터가 없습니다.</p>
     {% endif %}
-</body>
-</html>
+{% endif %}
+
+{% endblock %}

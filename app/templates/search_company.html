@@ -1,42 +1,59 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>기업 검색</title>
-</head>
-<body>
-    <h2>기업 검색</h2>
+{% extends "base.html" %}
+{% block title %}기업 검색 결과{% endblock %}
+{% block content %}
 
-    <form method="get" action="/search-company">
-        <input type="text" name="corp_name" placeholder="예: 네이버(주)" value="{{ corp_name or '' }}" required>
-        <button type="submit">검색</button>
-    </form>
+<!-- 기업명 출력 -->
+<h2 class="company-name">{{ corp_name }}</h2>
 
-    {% if corp_name %}
-        <hr>
-        <h3>검색한 기업 코드: {{ corp_name }}</h3>
-
-        {% if result %}
-            <h4>기업 정보</h4>
-            <table border="1">
-                <tr>
-                    <th>기업 고유코드</th>
-                    <th>기업명</th>
-                    <th>대표자명</th>
-                    <th>기업 구분</th>
-                    <th>본사 주소</th>
-                    <th>홈페이지 주소</th>
-                    <th>IR 정보 페이지</th>
-                    <th>정보 업데이트 일자</th>
-                </tr>
-                <tr>
-                    {% for i in range(8) %}
-                        <td>{{ result[i] }}</td>
-                    {% endfor %}
-                </tr>
-            </table>
+<!-- 기업 기본 정보 카드 -->
+{% if result %}
+<div class="company-info-card">
+    <p><strong>기업명:</strong> {{ result[1] }}({{ result[0] }})</p>
+    <p><strong>대표자명:</strong> {{ result[2] }}</p>
+    <p><strong>기업 구분:</strong> {{ result[3] }}</p>
+    <p><strong>본사 주소:</strong> {{ result[4] }}</p>
+    <p><strong>홈페이지:</strong>        
+        {% if result[5] %}
+            <a href="https://{{ result[5] }}" target="_blank">{{ result[5] }}</a>
         {% else %}
-            <p>해당 기업 코드를 가진 정보를 찾을 수 없습니다.</p>
+            없음
         {% endif %}
-    {% endif %}
-</body>
-</html>
+    </p>
+    <p><strong>IR 정보 페이지:</strong>
+        {% if result[6] %}
+            <a href="{{ result[6] }}" target="_blank">{{ result[6] }}</a>
+        {% else %}
+            없음
+        {% endif %}
+    </p>
+    <p><strong>정보 업데이트 일자:</strong> {{ result[7] }}</p>
+</div>
+{% else %}
+<p class="message">해당 기업 정보를 찾을 수 없습니다.</p>
+{% endif %}
+
+<!-- 개발 중인 영역 - 템플릿 include -->
+<div class="section-block" id="recruit-section">
+    <h3>채용기업정보</h3>
+    {% include "/includes/recruit_section.html" %}
+</div>
+
+<div class="section-block" id="news-section">
+    <h3>기업뉴스정보</h3>
+    {% include "/includes/news_section.html" %}
+</div>
+
+<div class="section-block" id="finance-section">
+    <h3>기업재무정보</h3>
+    {% include "/includes/finance_section.html" %}
+</div>
+
+<!-- 하단 바로가기 버튼 -->
+<div class="info-buttons">
+    <a href="#recruit-section" class="info-btn">채용공고</a>
+    <a href="#finance-section" class="info-btn">재무제표</a>
+    <a href="#news-section" class="info-btn">기업동향</a>
+    <a href="#" class="info-btn">기업홈페이지</a>
+</div>
+
+{% endblock %}

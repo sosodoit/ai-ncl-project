@@ -1,0 +1,236 @@
+/* ===== 레이아웃 기본 ===== */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+    /* background-color: #f9f9f9; */
+}
+
+/* ===== 콘텐츠 컨테이너 ===== */
+.container {
+    flex: 1;
+    background-color: #fff;
+    padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ===== 헤더 ===== */
+header {
+    background-color: #ccc;
+    padding: 1.5rem 0;
+}
+
+.header-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.menu-right a {
+    margin-left: 1rem;
+    background-color: white;
+    color: black;
+    padding: 0.4rem 0.9rem;
+    border-radius: 1rem;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+.menu-right a:hover {
+    background-color: #ddd;
+}
+
+/* ===== 검색창 ===== */
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    border-radius: 2rem;
+    padding: 0.6rem 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+}
+
+.search-box input {
+    border: none;
+    background: none;
+    font-size: 1rem;
+    flex-grow: 1;
+    outline: none;
+}
+
+.search-box button.icon {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+/* ===== 기업 리스트 ===== */
+.company-list {
+    background-color: #ccc;
+    width: 100%;
+    max-width: 400px;
+    min-height: 150px;
+    border-radius: 0.5rem;
+    color: white;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.company-list ul {
+    list-style: disc;
+    color: white;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    padding-left: 1rem;
+}
+
+/* ===== 테이블 공통 스타일 ===== */
+.table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 0.6rem;
+    text-align: center;
+}
+
+th {
+    background-color: #f3f3f3;
+}
+
+tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* ===== 메시지 스타일 ===== */
+.message {
+    margin-top: 2rem;
+    color: #777;
+    font-style: italic;
+}
+
+/* ===== 푸터 ===== */
+footer {
+    background-color: #ccc;
+    text-align: center;
+    padding: 1.5rem 0;
+    font-size: 0.85rem;
+    color: #333;
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ===== 테이블 선택 폼 ===== */
+.table-select-form {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.table-select-form select,
+.table-select-form button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 0.4rem;
+    outline: none;
+    background-color: #fff;
+}
+
+/* ===== 기업명 헤더 ===== */
+.company-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* ===== 기업 정보 카드 ===== */
+.company-info-card {
+    width: 100%;
+    max-width: 600px;
+    background-color: #f5f5f5;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* ===== 정보 섹션 공통 박스 ===== */
+.section-block {
+    width: 100%;
+    max-width: 700px;
+    margin-bottom: 2rem;
+}
+
+.section-block h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-placeholder {
+    background-color: #eee;
+    border-radius: 0.5rem;
+    padding: 1.2rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* ===== 하단 정보 버튼 영역 ===== */
+.info-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2.5rem 0 2rem;
+}
+
+.info-btn {
+    background-color: #333;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.info-btn:hover {
+    background-color: #555;
+}
