@@ -1,0 +1,39 @@
+# 베이스 이미지 선택
+FROM python:3.10-slim
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# 시스템 패키지 업데이트 및 필수 도구 설치
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    vim \
+    python3-dev \
+    python3-pip \
+    python3-venv \
+    wget \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# requirements.txt 복사
+COPY requirements/dev.txt ./requirements.txt
+
+# 가상환경 생성 및 활성화
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# pip 업그레이드 및 패키지 설치
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# 프로젝트 전체 복사
+COPY . .
+
+# jupyter 커널에 가상환경 등록
+RUN pip install ipykernel && \
+    python -m ipykernel install --name=nc-venv --display-name "Python (nc-venv)"
+
+# 포트 오픈 및 jupyter 실행
+EXPOSE 8888
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--no-browser"]
