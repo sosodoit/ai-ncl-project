@@ -73,13 +73,34 @@ def search_company_api(company: str = Query(...)):
 
 # ------------------- HTML 페이지 ------------------- 
 @app.get("/search-company", response_class=HTMLResponse)
-def search_company_page(request: Request):
-    """기업 검색 페이지 (JavaScript로 동적 구성)"""
-    return templates.TemplateResponse("search_company.html", {"request": request})
+def search_company(request: Request, corp_name: str = Query(default=None)):
+    
+    result = None
 
-# ------------------- 테이블 조회용 ------------------- 
-ALLOWED_TABLES = ["company_info"]
+    if corp_name:
+        try:
+            db = PostgreDB()
+            db._connection()
+            result = db._select(
+                table_name="company_info",
+                column="corp_name",
+                value=corp_name,
+                time_key="ORDER BY modify_date"
+            )
+            db._close()
+        except Exception as e:
+            return HTMLResponse(content=f"<h1>에러 발생: {e}</h1>", status_code=500)
 
+    return templates.TemplateResponse("search_company.html", {
+        "request": request,
+        "corp_name": corp_name,
+        "result": result
+    })
+#-----------------------------------------------------------#
+
+#############################################################
+#------------------- (확인용) 테이블 페이지 -------------------#
+ALLOWED_TABLES = ["company_info"] # 허용된 생성된 테이블 목록만 지정
 @app.get("/select-table", response_class=HTMLResponse)
 def select_and_view_table(request: Request, table_name: str = Query(None)):
     rows = []

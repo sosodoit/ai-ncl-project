@@ -76,18 +76,20 @@ class PostgreDB:
                 cur.execute(sql, (value,))
                 return cur.fetchone()
 
-    # INSERT
-    @staticmethod
-    def _insert(
-        table_name: str,
-        columns: List[str],
-        values:  List[Any]
-    ) -> None:
-        cols = ", ".join(columns)
-        ph   = ", ".join(["%s"] * len(values))
-        sql  = f"INSERT INTO {table_name} ({cols}) VALUES ({ph})"
+    # db insert
+    def _insert(self, table_name: str, columns: List[str], values: List) -> None:
+        
+        columns_str = ', '.join(columns)  # 컬럼 이름을 문자열로 연결
+        placeholders = ', '.join(['%s'] * len(values))  # 값의 개수에 맞게 플레이스홀더 생성
+        
+        sql = f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})"
 
-        with get_conn() as conn:
-            with conn.cursor() as cur:
-                cur.execute(sql, values)
-            conn.commit()
+        try:
+            self.cursor.execute(sql,values)
+            self.connection.commit()
+            print("db insert 성공")
+
+        except Exception as error:
+            print("db insert 중 에러 : ", error)
+            self.connection.rollback()
+            self._close()
