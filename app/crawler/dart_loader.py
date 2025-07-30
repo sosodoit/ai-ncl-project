@@ -100,8 +100,7 @@ def get_company_info(corp_code: str, start_year: str = "2022"):
             "corp_cls": info.get("corp_cls"),
             "adres": info.get("adres"),
             "hm_url": info.get("hm_url"),
-            "ir_url": info.get("ir_url"),
-            "modify_date": date.today()
+            "ir_url": info.get("ir_url")
         }
 
         #--------------------------------------------------------#
@@ -110,7 +109,7 @@ def get_company_info(corp_code: str, start_year: str = "2022"):
         #--------------------------------------------------------#
         df = dart.list(corp=corp_code, start=start_year, kind="A")
         if df.empty:
-            return company_info, []
+            return company_info, [], []
         
         df = df.sort_values(by="rcept_dt", ascending=False).reset_index(drop=True)
 
@@ -150,7 +149,7 @@ def get_company_info(corp_code: str, start_year: str = "2022"):
 
             if not html_path.exists():
                 dart.download(url=rd_url, fn=str(html_path))
-                print(f"[INFO] 다운로드 완료: {html_path}")
+                # print(f"[INFO] 다운로드 완료: {html_path}")
             
             # HTML → Markdown → JSON 변환
             jsonb_markdown = get_report_text(html_path)
