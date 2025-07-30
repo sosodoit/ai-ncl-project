@@ -1,42 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>기업 검색</title>
+  <meta charset="UTF-8" />
+  <title>기업 검색</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <!-- DOM 파싱 후 실행 -->
+  <script src="/static/js/search_company.js" defer></script>
 </head>
 <body>
-    <h2>기업 검색</h2>
-
-    <form method="get" action="/search-company">
-        <input type="text" name="corp_name" placeholder="예: 네이버(주)" value="{{ corp_name or '' }}" required>
-        <button type="submit">검색</button>
+  <div class="top-box">
+    <h2 id="company-title">기업 검색</h2>
+    <div id="rating-section" class="rating" style="display:none;"></div>
+    <form id="search-form">
+      <input type="text" id="company-input" name="company" placeholder="기업명 입력" />
+      <button type="submit">검색</button>
     </form>
+  </div>
 
-    {% if corp_name %}
-        <hr>
-        <h3>검색한 기업 코드: {{ corp_name }}</h3>
+  <hr />
 
-        {% if result %}
-            <h4>기업 정보</h4>
-            <table border="1">
-                <tr>
-                    <th>기업 고유코드</th>
-                    <th>기업명</th>
-                    <th>대표자명</th>
-                    <th>기업 구분</th>
-                    <th>본사 주소</th>
-                    <th>홈페이지 주소</th>
-                    <th>IR 정보 페이지</th>
-                    <th>정보 업데이트 일자</th>
-                </tr>
-                <tr>
-                    {% for i in range(8) %}
-                        <td>{{ result[i] }}</td>
-                    {% endfor %}
-                </tr>
-            </table>
-        {% else %}
-            <p>해당 기업 코드를 가진 정보를 찾을 수 없습니다.</p>
-        {% endif %}
-    {% endif %}
+  <div id="loading" style="display:none;text-align:center;padding:20px;">
+    <p>검색 중...</p>
+  </div>
+  <div id="error-message" style="display:none;color:red;text-align:center;padding:20px;"></div>
+  <div id="content-box" class="content-box"></div>
 </body>
 </html>

@@ -1,0 +1,123 @@
+/* 전체 기본 스타일 */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 2rem;
+}
+
+.top-box {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.top-box form {
+  margin-top: 1rem;
+}
+
+.top-box input[type="text"] {
+  width: 100%;
+  padding: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.top-box button {
+  width: 100%;
+  padding: 0.4rem;
+  background: #eee;
+  border: none;
+  cursor: pointer;
+}
+
+/* 컨테이너 레이아웃 */
+.container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* 왼쪽 박스 (입력 + 기업명 + 별점) */
+.left-box {
+  width: 280px;
+  border: 1px solid #ddd;
+  padding: 1.2rem;
+  border-radius: 6px;
+}
+
+/* 오른쪽 박스 (기업 정보 출력) */
+.right-box {
+  flex: 1;
+}
+
+/* 제목 마진 제거 */
+h2,
+h3 {
+  margin-top: 0;
+}
+
+/* 별점 표시 스타일 */
+.rating {
+  margin: 0.5rem 0;
+  font-size: 1.4rem;
+  color: #f39c12;
+}
+
+/* 별점 안의 회색 별 */
+.rating .gray,
+.gray {
+  color: #ccc;
+}
+
+/* 테이블 스타일 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+th {
+  background-color: #f9f9f9;
+}
+
+/* 구분선 */
+hr {
+  margin: 2rem 0 1rem;
+  border: 0;
+  height: 1px;
+  background: #eee;
+}
+
+p {
+  margin-bottom: 1em; /* 또는 원하는 px 단위 */
+}
+
+.rating {
+  font-size: 1.2rem;
+  color: #f39c12;
+  margin: 0.5rem 0;
+}
+
+.rating .score {
+  margin-left: 0.4rem;
+  color: #555;
+}
+
+.report-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 1.5rem;
+}
+
+.report-content {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
