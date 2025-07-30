@@ -69,7 +69,7 @@ def search_company(request: Request, corp_name: str = None):
 
 #############################################################
 #------------------- (확인용) 테이블 페이지 -------------------#
-ALLOWED_TABLES = ["company_info","dart_report_info","dart_report_text","dart_report_fs"] # 허용된 생성된 테이블 목록만 지정
+ALLOWED_TABLES = ["company_info","dart_report_info","dart_report_text","dart_report_ofs","dart_report_cfs"] # 허용된 생성된 테이블 목록만 지정
 @app.get("/select-table", response_class=HTMLResponse)
 def select_and_view_table(request: Request, table_name: str = Query(None)):
     

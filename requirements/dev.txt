@@ -27,6 +27,7 @@ requests>=2.31.0        # 외부 HTTP 요청 처리
 beautifulsoup4>=4.12.2  # HTML 파싱 및 데이터 스크래핑
 pandas>=2.2.0           # 데이터프레임 기반 분석 및 전처리
 tqdm>=4.66.0            # 진행률 시각화
+markdownify
 
 # 시각화 및 워드클라우드
 matplotlib>=3.7.0       # 데이터 시각화 라이브러리
