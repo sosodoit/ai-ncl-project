@@ -45,8 +45,12 @@ class PostgreDB:
         print("db 연결종료")
 
     # db select
-    def _select(self, table_name,column,value,time_key) :
-        sql = f"SELECT * FROM {table_name} WHERE {column} = %s {time_key} DESC LIMIT 1"
+    def _select(self, table_name, column, value, time_key = None) :
+
+        sql = f"SELECT * FROM {table_name} WHERE {column} = %s LIMIT 1"
+
+        if time_key:
+            sql = f"SELECT * FROM {table_name} WHERE {column} = %s {time_key} DESC LIMIT 1"
 
         try:
             self.cursor.execute(sql, (value ,))

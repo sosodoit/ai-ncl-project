@@ -27,7 +27,7 @@ def root(request: Request):
     try:
         db = PostgreDB()
         db._connection()
-        db.cursor.execute("SELECT corp_name FROM company_info ORDER BY corp_name LIMIT 10;")  # 필요 시 LIMIT 조절
+        db.cursor.execute("SELECT corp_name FROM dart_company_info ORDER BY corp_name LIMIT 10;")  # 필요 시 LIMIT 조절
         corp_names = [row[0] for row in db.cursor.fetchall()]
         db._close()
     except Exception as e:
@@ -51,10 +51,9 @@ def search_company(request: Request, corp_name: str = None):
             db = PostgreDB()
             db._connection()
             result = db._select(
-                table_name="company_info",
+                table_name="dart_company_info",
                 column="corp_name",
-                value=corp_name,
-                time_key="ORDER BY modify_date"
+                value=corp_name
             )
             db._close()
         except Exception as e:
@@ -69,7 +68,7 @@ def search_company(request: Request, corp_name: str = None):
 
 #############################################################
 #------------------- (확인용) 테이블 페이지 -------------------#
-ALLOWED_TABLES = ["company_info","dart_report_info","dart_report_text","dart_report_ofs","dart_report_cfs"] # 허용된 생성된 테이블 목록만 지정
+ALLOWED_TABLES = ["dart_company_info","dart_report_info","dart_report_text","dart_report_ofs","dart_report_cfs"] # 허용된 생성된 테이블 목록만 지정
 @app.get("/select-table", response_class=HTMLResponse)
 def select_and_view_table(request: Request, table_name: str = Query(None)):
     
@@ -84,7 +83,7 @@ def select_and_view_table(request: Request, table_name: str = Query(None)):
             db = PostgreDB()
             db._connection()
 
-            sql = f"SELECT * FROM {table_name} ORDER BY 1 DESC LIMIT 10;"
+            sql = f"SELECT * FROM {table_name} ORDER BY 1 DESC LIMIT 50;"
             db.cursor.execute(sql)
             rows = db.cursor.fetchall()
             colnames = [desc[0] for desc in db.cursor.description]
