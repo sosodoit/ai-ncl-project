@@ -1,0 +1,274 @@
+/* ===== 1. 기본 레이아웃 ===== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  background-color: #fafafa;
+}
+
+/* ===== 2. 헤더(Header) ===== */
+header {
+  background-color: #333;
+  padding: 1rem 0;
+  color: white;
+}
+.header-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+.menu-right a {
+  margin-left: 1rem;
+  background-color: white;
+  color: black;
+  padding: 0.4rem 0.9rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+.menu-right a:hover {
+  background-color: #ddd;
+}
+
+/* ===== 3. 홈 화면 전체 중앙 정렬 ===== */
+.home-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  margin: 2rem auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ===== 4. 검색 박스 ===== */
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: #eee;
+  border-radius: 2rem;
+  padding: 0.6rem 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+.search-box input {
+  border: none;
+  background: none;
+  font-size: 1rem;
+  flex-grow: 1;
+  outline: none;
+}
+.search-box button.icon {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.top-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 1.5rem 1rem;
+  margin: 2rem auto 0 auto;
+  width: 100%;
+  max-width: 900px;  
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.top-box h2 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.top-box .rating {
+  margin-top: 0.5rem;
+}
+
+
+/* ===== 5. 기업 리스트 박스 ===== */
+.company-list {
+  background-color: #ccc;
+  width: 100%;
+  max-width: 400px;
+  min-height: 150px;
+  border-radius: 0.5rem;
+  color: white;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+.company-list strong {
+  display: block;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+.company-list ul {
+  list-style: disc;
+  color: white;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  padding-left: 1.2rem;
+  margin: 0;
+}
+.message {
+  margin-top: 1rem;
+  color: #777;
+  font-style: italic;
+}
+
+/* ===== 6. 컨텐츠 박스 ===== */
+.content-box {
+  flex: 1;
+  /* padding: 1rem; */
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ===== 7. 섹션 블록 ===== */
+.section-block {
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  padding: 1.5rem 1rem;
+  box-sizing: border-box;
+}
+
+.section-block h3 {
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.section-placeholder {
+  background-color: #f9f9f9;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+/* ===== 8. 테이블 ===== */
+.table-wrapper { overflow-x: auto; width: 100%; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  background-color: white;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.6rem;
+  text-align: center;
+}
+th {
+  background-color: #f3f3f3;
+}
+tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* ===== 9. 하단 버튼 ===== */
+.info-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2.5rem 0 2rem;
+}
+.info-btn {
+  background-color: #333;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+.info-btn:hover {
+  background-color: #555;
+}
+
+/* ===== 10. 푸터(Footer) ===== */
+footer {
+  background-color: #333;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.85rem;
+  color: #fff;
+  margin-top: auto;
+  border-top: 2px solid #444;
+}
+.footer-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+footer a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* ===== 11. 로딩/에러 ===== */
+.loading { text-align: center; color: #555; padding: 1rem; }
+.error-message { text-align: center; color: red; padding: 1rem; }
+
+/* DB 조회 */
+.table-select-form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.table-select-form select,
+.table-select-form button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  outline: none;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.table-select-form button {
+  background-color: #333;
+  color: white;
+  border-radius: 0.4rem;
+  transition: background 0.2s;
+}
+
+.table-select-form button:hover {
+  background-color: #555;
+}

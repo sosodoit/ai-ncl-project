@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+    
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}NEXT CAREER{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <!-- 상단 -->
+    <header>
+        <div class="header-container">
+            <span class="logo">NEXT CAREER</span>
+            <div class="menu-right">
+                <a href="/" class="home-button">홈</a>
+                <a href="/select-table" class="db-button">DB</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- 하단 -->
+    <footer>
+        <div class="footer-container">
+            <p><strong>NEXT CAREER</strong> | AI 기반 기업 정보 탐색 플랫폼</p>
+            <p>문의: 넥스트커리어팀</p>
+            <p>© 2025 NEXT CAREER. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

@@ -1,23 +1,36 @@
-# ai-ncl-project (가칭)
+# Next Career Project (가칭)
 
-FastAPI와 PostgreSQL 기반으로 동작하는 기업 정보 제공 API 백엔드입니다.  
-OpenDART에서 기업 개황 정보를 수집하고, 데이터베이스에 저장한 뒤 API를 통해 제공합니다.
+Next Career는 기업 정보, 최신 뉴스, 재무 데이터를 기반으로 사용자 맞춤형 취업 · 지원 전략을 제시하는 것을 목표로 합니다.
 
 ---
 
 ## 🗂️ 프로젝트 디렉토리 구조
 ```
 ├── app/
-│   ├── crawler/             # DART 크롤링 모듈
-│   ├── initdb/              # DB 초기화 SQL
-│   ├── templates/           # Jinja2 템플릿
-├── scripts/                 # 보조 스크립트 (데이터 적재 등)
-├── main.py                  # FastAPI 진입점
-├── database.py              # DB 연결 유틸리티
-├── Dockerfile               # 백엔드 Docker 이미지 정의
-├── docker-compose.yml       # 전체 서비스 구성 (FastAPI + PostgreSQL)
-├── .env                     # 환경변수 정의
-├── requirements.txt         # 의존성 라이브러리
+│   ├── crawler/                  # DART 크롤링 모듈
+│   ├── initdb/                   # DB 초기화 SQL
+│   ├── static/              
+│   ├── templates/                # Jinja2 템플릿
+│   ├── database.py               # DB 연결 유틸리티
+│   ├── environment.py            
+│   ├── config.py                 
+│   ├── main.py                   # FastAPI 진입점
+│
+├── scripts/                      # 데이터 적재 및 보조 스크립트
+├── notebooks/                    # Jupyter Notebook 작업용
+│
+├── docker/
+│   ├── docker-compose.dev.yml    # 개발용 Compose
+│   ├── docker-compose.prod.yml   # 운영용 Compose
+│   ├── Dockerfile                # FastAPI 서버 Dockerfile
+│   ├── Dockerfile.jupyter        # Jupyter 환경 Dockerfile
+│
+├── requirements/
+│   ├── dev.txt                   # 개발용 패키지
+│   ├── prod.txt                  # 운영용 패키지
+│
+├── .env                          # 환경변수 파일
+├── Makefile                      # 도커 실행 및 종료 명령어 정리
 ```
 
 ## ⌛ 실행 방법
@@ -35,26 +48,43 @@ cd ai-ncl-project
 .env 파일에서 PostgreSQL 접속 정보 등을 필요에 맞게 수정
 
 # PostgreSQL 설정
-POSTGRE_HOST=localhost
+POSTGRE_HOST=localdb
 POSTGRE_PORT=5432
-POSTGRE_DB=mydb
+POSTGRE_DB=postgres
 POSTGRE_USER=postgres
-POSTGRE_PASSWORD=your_password
+POSTGRE_PASSWORD=####
 ```
 - 도커로 실행할시,
-- POSTGRE_HOST 는 docker-compose.yml의 db 서비스명과 동일해야함 (서비스명: db)
+- **POSTGRE_HOST 는 docker-compose.yml의 db 서비스명과 동일해야함 (서비스명: db)**
 - POSTGRE_PORT 는 기본 디폴트 포트 사용
 - POSTGRE_DB 는 생성할 DB 명 입력 (본인은 corpdata 입력함)
 - USER는 기본 디폴트 계정 postgres 사용
 - PASSWORD는 자신의 PostgreSQL 셋팅시 설정했던 내용
+- .env 파일 프로젝트 루트에 위치
 
-### 3. Docker로 실행 (FastAPI + PostgreSQL)
+### 3. Makefile을 이용한 Docker 실행 (FastAPI + PostgreSQL)
+- 개발용 / 운영용 환경을 분리
 ```
-docker-compose up --build
+# 개발 환경 실행
+make dev
+
+# 운영 환경 실행
+make prod
+
+# 리눅스 환경 아니면 아래 도커 명령어 실행
+docker-compose --env-file .env -f docker/docker-compose.dev.yml up --build
+docker-compose --env-file .env -f docker/docker-compose.prod.yml up -d --build
 ```
-- 위 명령어 실행시, Dockefile에 작성해둔 py39 기반으로 requirements 라이브러리 설치되고 fastapi 사용할 수 있는 환경이 셋팅된 이미지 빌드 시작
-- 이어서 postgres와 네트워크 연결된 컨테이너 생성되면서,
-- 정상 실행중이면 fastapi 서버 확인 가능, 작업 시작
+- 위 명령어 실행시, 
+- dev -> jupyterlab 사용할 수 있는 개발 및 분석 환경, prod -> 운영용 fastapi 환경 셋팅할 수 있는 이미지 빌드 후 컨테이너 실행
+
+```
+# 개발 환경 종료
+make down-dev   
+
+# 운영 환경 종료
+make down-prod  
+```
 
 ## ⚙️ 도커 기본 명령어
 - 작업시 자주 사용하는거
@@ -90,22 +120,25 @@ docker run -p 5432:5432 --name postgresdb -e POSTGRES_PASSWORD=# -d -v pgdata:/v
 ```
 
 ## ⚙️ DB 관련 작업
-company_info 테이블 기준 설명
+dart_company_info 테이블 기준 설명
 
 #### 1) DB 생성
-```
-초기 환경변수에서 입력한 DB명으로 생성됨: corpdata
-POSTGRES_DB는 초기 생성될 기본 DB 이름일 뿐이며, 이후에 SQL로 얼마든지 다른 DB를 추가 생성 가능하다고 함
-```
+- 초기 환경변수에서 입력한 `DB명`으로 생성됨
+- `POSTGRES_DB`는 초기 생성될 기본 DB 이름일 뿐이며, 이후 SQL로 다른 DB를 추가 생성할 수 있음
 
 #### 2) 테이블 생성
-```
-initdb/init.sql : company_info 테이블 생성 스크립트
-생성할 테이블 스크립트가 작성된 sql 파일이 해당 경로에 있으면 초기 도커 실행시 자동 생성
-```
+- 초기화 SQL 스크립트 경로: `initdb/init.sql`
+- `dart_company_info` 테이블 생성 스크립트 작성
+- `init.sql`이 해당 경로에 존재하면 **도커 초기 실행 시 자동으로 테이블 생성**
 
 #### 3) 데이터 적재
+- 방법 1: 도커 컨테이너 내에서 스크립트 실행
 ```
 docker exec -it 컨테이너이름 python scripts/load_companies.py
 ```
+- 방법 2: 주피터 노트북을 통해 데이터 적재
 
+    `scripts` 폴더에는 다음 3개의 Jupyter Notebook이 있으며, 각 노트북에서 데이터를 DB에 적재할 수 있음
+1. [공시정보적재.ipynb](scripts/공시정보적재.ipynb)  
+2. [기업코드적재.ipynb](scripts/기업코드적재.ipynb)  
+3. [재무지표적재.ipynb](scripts/재무지표적재.ipynb)

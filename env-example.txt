@@ -4,11 +4,11 @@
 # - OPENDART_API_KEY는 크롤링 기능에만 필요하므로, FastAPI 서버 실행만 하는 경우 생략해도 무방합니다.
 
 # PostgreSQL 설정
-POSTGRE_HOST=localhost
+POSTGRE_HOST=localdb
 POSTGRE_PORT=5432
-POSTGRE_DB=mydb
-POSTGRE_USER=your_username
-POSTGRE_PASSWORD=your_password
+POSTGRE_DB=postgres
+POSTGRE_USER=postgres
+POSTGRE_PASSWORD=####
 
 # (선택) 기업 크롤링용 OpenDART API 키 
 DART_API_KEY=your-api-key-here

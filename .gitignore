@@ -207,3 +207,8 @@ data/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+config/db_config.env
+*.env
+*.pem
+*.key

@@ -1,0 +1,52 @@
+services:
+  localdb:
+    image: postgres:13
+    container_name: ${POSTGRE_HOST}
+    environment:
+      POSTGRES_USER: ${POSTGRE_USER}
+      POSTGRES_PASSWORD: ${POSTGRE_PASSWORD}
+      POSTGRES_DB: ${POSTGRE_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_v1:/var/lib/postgresql/data
+      - ../app/initdb:/docker-entrypoint-initdb.d
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ncl-server-dev-v1
+    ports:
+      - "8080:80"
+    env_file:
+      - ../.env
+    depends_on:
+      - localdb
+    volumes:
+      - ..:/app
+    environment:
+      - PYTHONPATH=/app
+
+  jupyter:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.jupyter
+    container_name: ncl-jupyter-v1
+    ports:
+      - "8888:8888"
+    volumes:
+      - ..:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      jupyter lab
+      --ServerApp.token=''
+      --ServerApp.password=''
+      --ip=0.0.0.0
+      --port=8888
+      --allow-root
+      --no-browser
+
+volumes:
+  pgdata_v1:

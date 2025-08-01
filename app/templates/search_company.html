@@ -1,42 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>기업 검색</title>
-</head>
-<body>
-    <h2>기업 검색</h2>
+{% extends "base.html" %}
+{% block title %}기업 검색 결과{% endblock %}
+{% block content %}
 
-    <form method="get" action="/search-company">
-        <input type="text" name="corp_name" placeholder="예: 네이버(주)" value="{{ corp_name or '' }}" required>
-        <button type="submit">검색</button>
-    </form>
+<div class="top-box">
+  <h2 id="company-title">{{ corp_name or "기업 검색" }}</h2>
+  <div id="rating-section" class="rating" style="display:none;"></div>
 
-    {% if corp_name %}
-        <hr>
-        <h3>검색한 기업 코드: {{ corp_name }}</h3>
+  <form id="search-form" action="/search-company" method="get" class="search-box">
+    <input type="text" id="company-input" name="company" value="{{ corp_name or '' }}" placeholder="기업명을 입력하세요." />
+    <button type="submit" class="icon">🔍</button>
+  </form>
+</div>
 
-        {% if result %}
-            <h4>기업 정보</h4>
-            <table border="1">
-                <tr>
-                    <th>기업 고유코드</th>
-                    <th>기업명</th>
-                    <th>대표자명</th>
-                    <th>기업 구분</th>
-                    <th>본사 주소</th>
-                    <th>홈페이지 주소</th>
-                    <th>IR 정보 페이지</th>
-                    <th>정보 업데이트 일자</th>
-                </tr>
-                <tr>
-                    {% for i in range(8) %}
-                        <td>{{ result[i] }}</td>
-                    {% endfor %}
-                </tr>
-            </table>
-        {% else %}
-            <p>해당 기업 코드를 가진 정보를 찾을 수 없습니다.</p>
-        {% endif %}
-    {% endif %}
-</body>
-</html>
+<!-- 로딩, 에러, 동적 결과 박스 -->
+<div id="loading" style="display:none;text-align:center;padding:20px;"><p>검색 중...</p></div>
+<div id="error-message" style="display:none;color:red;text-align:center;padding:20px;"></div>
+
+<!-- 검색 결과 섹션 -->
+<div id="content-box" class="content-box">
+
+  <!-- 채용 정보 -->
+  <div class="section-block" id="recruit-section">
+    <h3>채용기업정보</h3>
+    <div class="section-placeholder" id="company-content">
+      <p class="message">검색 후 채용정보가 표시됩니다.</p>
+    </div>
+    <br>
+    <div class="section-placeholder" id="enterprise-content">
+      <p class="message">검색 후 채용정보가 표시됩니다.</p>
+    </div>
+  </div>
+
+  <!-- 뉴스 정보 -->
+  <div class="section-block" id="news-section">
+    <h3>기업뉴스정보</h3>
+    <div class="section-placeholder" id="news-content">
+      <p class="message">검색 후 뉴스가 표시됩니다.</p>
+    </div>
+  </div>
+
+  <!-- 재무 정보 -->
+  <div class="section-block" id="finance-section">
+    <h3>기업재무정보</h3>
+    <div class="section-placeholder" id="finance-content">
+      <p class="message">검색 후 재무정보가 표시됩니다.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- 하단 바로가기 버튼 -->
+<div class="info-buttons">
+    <a href="#recruit-section" class="info-btn">채용공고</a>
+    <a href="#finance-section" class="info-btn">재무제표</a>
+    <a href="#news-section" class="info-btn">기업동향</a>
+    <a href="#" class="info-btn">기업홈페이지</a>
+</div>
+
+<!-- DOM 파싱 후 실행 -->
+<script src="/static/js/search_company.js" defer></script>
+
+{% endblock %}

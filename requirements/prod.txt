@@ -1,0 +1,30 @@
+# 웹 프레임워크 및 서버
+fastapi               # FastAPI 웹 프레임워크
+uvicorn               # FastAPI용 ASGI 서버
+
+# 템플릿 엔진
+jinja2                # HTML 템플릿 렌더링용
+
+# 데이터 모델링 및 검증
+pydantic              # 데이터 유효성 검증 및 스키마 정의
+
+# 데이터베이스 연동
+sqlalchemy            # ORM 및 SQL 쿼리 작성
+psycopg2-binary       # PostgreSQL 드라이버
+
+# 환경 변수 및 요청 처리
+python-dotenv         # .env 파일 로드
+python-multipart      # FormData 업로드 지원
+
+# 외부 크롤링
+opendartreader        # DART 전자공시 기업정보 크롤링
+
+# OpenAI API 및 외부 요청
+openai>=1.0.0           # OpenAI GPT API 사용
+requests>=2.31.0        # 외부 HTTP 요청 처리
+
+# 데이터 수집 및 전처리
+beautifulsoup4>=4.12.2  # HTML 파싱 및 데이터 스크래핑
+pandas>=2.2.0           # 데이터프레임 기반 분석 및 전처리
+tqdm>=4.66.0            # 진행률 시각화
+markdownify

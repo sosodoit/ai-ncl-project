@@ -1,0 +1,44 @@
+# 파일명: docker-compose.yml
+# 설명: FastAPI 백엔드와 PostgreSQL 데이터베이스를 포함한 전체 서비스 구성을 정의합니다.
+# 관련 파일: Dockerfile, .env, database.py
+# 주의사항:
+# - 실행 전 반드시 .env 파일이 루트 경로에 있어야 합니다.
+# - FastAPI와 DB 컨테이너는 기본적으로 포트 80, 5432를 사용합니다.
+# - 개발용 설정이며, 배포 시에는 별도의 환경설정이 필요합니다.
+services:
+  localdb:
+    image: postgres:13
+    container_name: ${POSTGRE_HOST}
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRE_USER}
+      POSTGRES_PASSWORD: ${POSTGRE_PASSWORD}
+      POSTGRES_DB: ${POSTGRE_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_v1:/var/lib/postgresql/data
+      - ../app/initdb:/docker-entrypoint-initdb.d
+      # 컨테이너가 처음 실행될 때만 init.sql이 자동으로 실행돼서 테이블이 만들어짐
+      # 이미 생성된 컨테이너에서는 다시 실행되지 않음 → docker-compose down -v로 초기화해야 적용됨
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ncl-server-v1
+    restart: always
+    ports:
+      - "80:80"
+    env_file:
+      - ../.env
+    depends_on:
+      - localdb
+    volumes:
+      - ..:/app
+      - ..:/scripts
+    environment:
+      - PYTHONPATH=/app
+      
+volumes:
+  pgdata_v1:
