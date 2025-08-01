@@ -2,22 +2,25 @@
 {% block title %}NEXT CAREER - 홈{% endblock %}
 {% block content %}
 
-<!-- 검색 입력창 (submit 시 기업 검색 링크로 이동) -->
-<form action="/search-company" method="get" class="search-box">
-    <input type="text" name="corp_name" placeholder="기업명을 입력하세요.">
-    <button type="submit" class="icon">🔍</button>
-</form>
+<div class="home-wrapper">
+    <!-- 검색 입력창 (submit 시 기업 검색 링크로 이동) -->
+    <form action="/search-company" method="get" class="search-box">
+        <input type="text" id="company-input" name="company" value="{{ corp_name or '' }}" placeholder="기업명을 입력하세요." />
+        <button type="submit" class="icon">🔍</button>
+    </form>
+    </form>
 
-<!-- 기업 리스트 박스 -->
-<div class="company-list">
-    <strong>조회 가능한 기업 리스트</strong>
-    <ul style="margin-top: 0.5rem; padding-left: 1rem;">
-        {% for name in corp_names %}
-            <li>{{ name }}</li>
-        {% else %}
-            <li>기업 목록을 불러올 수 없습니다.</li>
-        {% endfor %}
-    </ul>
+    <!-- 기업 리스트 박스 -->
+    <div class="company-list">
+        <strong>조회 가능한 기업 리스트</strong>
+        <ul style="margin-top: 0.5rem; padding-left: 1rem;">
+            {% for name in corp_names %}
+                <li>{{ name }}</li>
+            {% else %}
+                <li>기업 목록을 불러올 수 없습니다.</li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 
 {% endblock %}

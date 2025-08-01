@@ -7,70 +7,82 @@
 - 데이터베이스 연결 객체는 재사용 가능한 방식으로 구성되어 있어야 합니다.
 """
 
-import psycopg2
-from typing import List
 import os
-from dotenv import load_dotenv
-load_dotenv()
+from typing import List, Generator, Any
+from contextlib import contextmanager
+from app.environment import env
 
-user = os.getenv("POSTGRE_USER")
-pw = os.getenv("POSTGRE_PASSWORD")
-db_host = os.getenv("POSTGRE_HOST")
-db_port = os.getenv("POSTGRE_PORT")
-db = os.getenv("POSTGRE_DB")
+import psycopg2
+from psycopg2.pool import ThreadedConnectionPool
+from psycopg2.extras import RealDictCursor
+
+user = env.get("POSTGRE_USER")
+pw = env.get("POSTGRE_PASSWORD")
+db_host = env.get("POSTGRE_HOST")
+db_port = env.get("POSTGRE_PORT")
+db = env.get("POSTGRE_DB")
 
 POSTGRE_URL=f"postgresql://{user}:{pw}@{db_host}:{db_port}/{db}"
 
+# 1. 전역 커넥션 풀 (프로세스당 1개)
+POOL = ThreadedConnectionPool(
+    # 서비스에 따라서 min,max 변경가능
+    minconn=5, # 커넥션 최소 5개 유지
+    maxconn=30, # 동시에 30개까지 점유 허용
+    dsn=POSTGRE_URL
+)
+
+# ───────────── 2. 컨텍스트 매니저 ─────────────
+@contextmanager
+def get_conn(cursor_dict: bool = False) -> Generator[psycopg2.extensions.connection, None, None]:
+    """
+    with get_conn() as conn:
+        ...
+    cursor_dict=True ➜ RealDictCursor 반환
+    """
+    conn = POOL.getconn()
+    try:
+        if cursor_dict:
+            # 기본 커서 대신 딕트형 커서가 필요할 때
+            conn.cursor_factory = RealDictCursor
+        yield conn
+    finally:
+        POOL.putconn(conn)
+
+# 3. 클래스 유틸 
 class PostgreDB:
-
-    def __init__(self):
-        self.db_url = POSTGRE_URL
-        self.connection = None
-        self.cursor = None
-
-    # db 연결
-    def _connection(self):
-        try:
-            self.connection = psycopg2.connect(self.db_url)
-            self.cursor = self.connection.cursor()
-            print("db연결 성공")
-        except Exception as error:
-            print("db연결 중 에러 발생 :", error)
-            self.connection = None
-
-    # db 연결 종료
-    def _close(self):
-        self.connection.close()
-        self.cursor.close()
-        print("db 연결종료")
-
-    # db select
-    def _select(self, table_name, column, value, time_key = None) :
-
-        sql = f"SELECT * FROM {table_name} WHERE {column} = %s LIMIT 1"
-
-        if time_key:
-            sql = f"SELECT * FROM {table_name} WHERE {column} = %s {time_key} DESC LIMIT 1"
-
-        try:
-            self.cursor.execute(sql, (value ,))
-            return self.cursor.fetchone()
-
-        except Exception as error:
-            print("db select 중 에러 : ", error)
-            self.connection.rollback()
-            self._close()
+    """
+    커넥션 풀 구조로 변경 (select 요청별로 connection,close시 
+    max_connections 초과나 복잡도 문제로 변경)
+    """
+    # SELECT
+    @staticmethod
+    def _select(
+        table_name: str,
+        column: str,
+        value: Any,
+        order_by: str = "",
+        dict_row: bool = False
+    ):
+        order_clause = f"ORDER BY {order_by} DESC" if order_by else ""
+        sql = f"""
+            SELECT * FROM {table_name}
+             WHERE {column} = %s
+             {order_clause}
+             LIMIT 1
+        """
+        with get_conn(cursor_dict=dict_row) as conn:
+            with conn.cursor() as cur:
+                cur.execute(sql, (value,))
+                return cur.fetchone()
 
     # db insert
-    def _insert(self, table_name: str, columns: List[str], values: List, conflict_key: str = None) -> None:
+    def _insert(self, table_name: str, columns: List[str], values: List) -> None:
         
         columns_str = ', '.join(columns)  # 컬럼 이름을 문자열로 연결
         placeholders = ', '.join(['%s'] * len(values))  # 값의 개수에 맞게 플레이스홀더 생성
         
         sql = f"INSERT INTO {table_name} ({columns_str}) VALUES ({placeholders})"
-
-        if conflict_key:
-            sql += f" ON CONFLICT ({conflict_key}) DO NOTHING"
 
         try:
             self.cursor.execute(sql,values)

@@ -1,5 +1,5 @@
 services:
-  db:
+  localdb:
     image: postgres:13
     container_name: ${POSTGRE_HOST}
     environment:
@@ -9,20 +9,20 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_v1:/var/lib/postgresql/data
       - ../app/initdb:/docker-entrypoint-initdb.d
 
   web:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    container_name: ncl-server-dev
+    container_name: ncl-server-dev-v1
     ports:
       - "8080:80"
     env_file:
       - ../.env
     depends_on:
-      - db
+      - localdb
     volumes:
       - ..:/app
     environment:
@@ -32,7 +32,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.jupyter
-    container_name: ncl-jupyter
+    container_name: ncl-jupyter-v1
     ports:
       - "8888:8888"
     volumes:
@@ -49,4 +49,4 @@ services:
       --no-browser
 
 volumes:
-  pgdata:
+  pgdata_v1:

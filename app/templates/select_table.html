@@ -2,22 +2,21 @@
 {% block title %}DB 조회{% endblock %}
 {% block content %}
 
-<h2>테이블 조회</h2>
+<div class="top-box">
+    <h2>테이블 조회</h2>
+    <form method="get" action="/select-table" class="table-select-form">
+        <select name="table_name">
+            {% for t in tables %}
+                <option value="{{ t }}" {% if t == table_name %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">조회</button>
+    </form>
+</div>
 
-<!-- 테이블 선택 폼 -->
-<form method="get" action="/select-table" class="table-select-form">
-    <select name="table_name">
-        {% for t in tables %}
-            <option value="{{ t }}" {% if t == table_name %}selected{% endif %}>{{ t }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit">조회</button>
-</form>
-
-<!-- 선택된 테이블 결과 -->
 {% if table_name %}
-    <h3 style="margin-top: 2rem;">📄 {{ table_name }} 테이블</h3>
-
+<div class="section-block">
+    <h3>📄 {{ table_name }} 테이블</h3>
     {% if rows %}
         <div class="table-wrapper">
             <table>
@@ -42,6 +41,6 @@
     {% else %}
         <p class="message">데이터가 없습니다.</p>
     {% endif %}
+</div>
 {% endif %}
-
 {% endblock %}

@@ -1,8 +1,6 @@
-# ai-ncl-project (가칭)
+# Next Career Project (가칭)
 
-Next Career Lens는 FastAPI와 PostgreSQL 기반의 기업 정보 분석 API 백엔드 서비스입니다.
-이 서비스는 AI/DATA 기업 정보 및 재무제표와 최신 뉴스/트렌드 데이터를 활용하여
-사용자가 특정 기업의 현황과 변화를 한눈에 파악할 수 있도록 지원합니다.
+Next Career는 기업 정보, 최신 뉴스, 재무 데이터를 기반으로 사용자 맞춤형 취업 · 지원 전략을 제시하는 것을 목표로 합니다.
 
 ---
 
@@ -14,6 +12,8 @@ Next Career Lens는 FastAPI와 PostgreSQL 기반의 기업 정보 분석 API 백
 │   ├── static/              
 │   ├── templates/                # Jinja2 템플릿
 │   ├── database.py               # DB 연결 유틸리티
+│   ├── environment.py            
+│   ├── config.py                 
 │   ├── main.py                   # FastAPI 진입점
 │
 ├── scripts/                      # 데이터 적재 및 보조 스크립트
@@ -48,11 +48,11 @@ cd ai-ncl-project
 .env 파일에서 PostgreSQL 접속 정보 등을 필요에 맞게 수정
 
 # PostgreSQL 설정
-POSTGRE_HOST=localhost
+POSTGRE_HOST=localdb
 POSTGRE_PORT=5432
-POSTGRE_DB=mydb
+POSTGRE_DB=postgres
 POSTGRE_USER=postgres
-POSTGRE_PASSWORD=your_password
+POSTGRE_PASSWORD=####
 ```
 - 도커로 실행할시,
 - **POSTGRE_HOST 는 docker-compose.yml의 db 서비스명과 동일해야함 (서비스명: db)**
@@ -120,22 +120,25 @@ docker run -p 5432:5432 --name postgresdb -e POSTGRES_PASSWORD=# -d -v pgdata:/v
 ```
 
 ## ⚙️ DB 관련 작업
-company_info 테이블 기준 설명
+dart_company_info 테이블 기준 설명
 
 #### 1) DB 생성
-```
-초기 환경변수에서 입력한 DB명으로 생성됨: corpdata
-POSTGRES_DB는 초기 생성될 기본 DB 이름일 뿐이며, 이후에 SQL로 얼마든지 다른 DB를 추가 생성 가능하다고 함
-```
+- 초기 환경변수에서 입력한 `DB명`으로 생성됨
+- `POSTGRES_DB`는 초기 생성될 기본 DB 이름일 뿐이며, 이후 SQL로 다른 DB를 추가 생성할 수 있음
 
 #### 2) 테이블 생성
-```
-initdb/init.sql : company_info 테이블 생성 스크립트
-생성할 테이블 스크립트가 작성된 sql 파일이 해당 경로에 있으면 초기 도커 실행시 자동 생성
-```
+- 초기화 SQL 스크립트 경로: `initdb/init.sql`
+- `dart_company_info` 테이블 생성 스크립트 작성
+- `init.sql`이 해당 경로에 존재하면 **도커 초기 실행 시 자동으로 테이블 생성**
 
 #### 3) 데이터 적재
+- 방법 1: 도커 컨테이너 내에서 스크립트 실행
 ```
 docker exec -it 컨테이너이름 python scripts/load_companies.py
 ```
+- 방법 2: 주피터 노트북을 통해 데이터 적재
 
+    `scripts` 폴더에는 다음 3개의 Jupyter Notebook이 있으며, 각 노트북에서 데이터를 DB에 적재할 수 있음
+1. [공시정보적재.ipynb](scripts/공시정보적재.ipynb)  
+2. [기업코드적재.ipynb](scripts/기업코드적재.ipynb)  
+3. [재무지표적재.ipynb](scripts/재무지표적재.ipynb)
